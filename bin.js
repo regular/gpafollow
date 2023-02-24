@@ -42,8 +42,15 @@ db.continuation.get((err, value) => {
   console.error('continuation value is', formatTimestamp(value))
   conf.continuation = value
 
+  const source = stream(conf)
+
+  source.getIds( (err, ids)=>{
+    if (err) console.error('error getting IDs', err.message)
+    console.log(ids)
+  })
+
   pull(
-    stream(conf),
+    source,
     pullLooper,
     bufferUntil( buff=>{
       return buff[buff.length-1].type == '__since'

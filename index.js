@@ -8,13 +8,16 @@ const { inspect } = require('util')
 
 const interval = require('./interval')
 const query = require('./ql')
+const ResolveIds = require('./resolve')
 
 module.exports = function(conf) {
   conf = conf || {}
   if (!conf.apitoken) return pull.error('no apitoken configured')
   if (!conf.endpoint) return pull.error('no endpoint configured')
+  if (!conf.resolve_endpoint) return pull.error('no resolve_endpoint configured')
 
   const {through, schema} = query(conf.apitoken, conf.endpoint)
+  const getIds = ResolveIds(conf.apitoken, conf.resolve_endpoint)
 
   const dt_max = DateTime.now().setZone(conf.tz).minus(conf.minage)
   const dt_start = conf.continuation ?
@@ -38,8 +41,9 @@ module.exports = function(conf) {
       timestamp_lte: '$tslte',
     })
     //console.log(query)
-    deferred.resolve( stream(query) )
+    deferred.resolve(stream(query))
   })
+  deferred.getIds = getIds
   return deferred
 
   function typesFromSchema(types) {
@@ -51,6 +55,7 @@ module.exports = function(conf) {
   }
 
   function stream(query) {
+    //console.log(query)
     return pull(
       interval(dt_start, dt_end, dt_max),
       pull.through( ({start, end})=>{
