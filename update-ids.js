@@ -3,6 +3,7 @@
 //jshint  esversion: 6
 const multicb = require('multicb')
 const Reduce = require('flumeview-reduce')
+const equal = require('deep-equal')
 
 module.exports = function (db, requestIds) {
   db.use('suuids', Reduce(3, (acc, item) => {
@@ -21,7 +22,14 @@ module.exports = function (db, requestIds) {
     done((err, response, stored) => {
       if (err) return cb(err)
       // TODO: use deepEqual to detect changes in exisitng entities
-      const newItems = response.suuid_index.filter(item => !stored[item.suuid])
+      const newItems = response.suuid_index.filter(item => {
+        const {suuid} = item
+        if (!stored[suuid]) return true
+        return !equal(
+          Object.assign({}, stored[suuid], {suuid: null}),
+          Object.assign({}, item, {suuid: null})
+        )
+      })
       console.log(newItems.length, 'new suuid entities')
       const toStore = newItems.map( item =>{
         return {

@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bl": "^6.0.0",
+    "deep-equal": "^2.2.0",
     "flumedb": "^2.1.8",
     "flumelog-offset": "^3.4.4",
     "flumeview-reduce": "^1.4.0",
