@@ -16,6 +16,7 @@
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
     "luxon": "^3.2.1",
+    "multicb": "^1.2.2",
     "pull-buffer-until": "^2.1.0",
     "pull-defer": "^0.2.3",
     "pull-looper": "^1.0.0",

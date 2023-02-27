@@ -16,6 +16,7 @@ const Reduce = require('flumeview-reduce')
 const Flume = require('flumedb')
 
 const stream = require('.')
+const UpdateIds = require('./update-ids')
 
 const conf = require('rc')('gpafollow', {
   rqdelay: 10000,
@@ -43,10 +44,8 @@ db.continuation.get((err, value) => {
   conf.continuation = value
 
   const source = stream(conf)
-
-  source.getIds( (err, ids)=>{
-    if (err) console.error('error getting IDs', err.message)
-    console.log(ids)
+  UpdateIds(db, source.getIds)(err =>{
+    if (err) console.error('Error updating suuids:', err.message)
   })
 
   pull(
