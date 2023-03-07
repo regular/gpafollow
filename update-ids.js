@@ -24,7 +24,7 @@ module.exports = function (db, requestIds) {
       // TODO: use deepEqual to detect changes in exisitng entities
       const newItems = response.suuid_index.filter(item => {
         const {suuid} = item
-        if (!stored[suuid]) return true
+        if (!stored || !stored[suuid]) return true
         return !equal(
           Object.assign({}, stored[suuid], {suuid: null}),
           Object.assign({}, item, {suuid: null})
