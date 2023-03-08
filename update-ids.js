@@ -5,7 +5,7 @@ const multicb = require('multicb')
 const Reduce = require('flumeview-reduce')
 const equal = require('deep-equal')
 
-module.exports = function (db, requestIds) {
+module.exports = function (db) {
   db.use('suuids', Reduce(3, (acc, item) => {
     acc = acc || {}
     if (item.type !== 'suuid') return acc
@@ -15,7 +15,7 @@ module.exports = function (db, requestIds) {
     return acc
   }))
   
-  return function(cb) {
+  return function(requestIds, cb) {
     const done = multicb({pluck: 1, spread: true})
     requestIds(done())
     db.suuids.get(done())
