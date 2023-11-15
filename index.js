@@ -25,7 +25,7 @@ module.exports = function(conf) {
     DateTime.fromISO(conf.startday).setZone(conf.tz).startOf('day')
   const dt_end = DateTime.min(dt_max, dt_start.plus({days: 2}).endOf('day'))
 
-  if ( !(dt_start < dt_max) ) return pullerror(
+  if ( !(dt_start < dt_max) ) return pull.error(
     `startday needs to be ${JSON.stringify(conf.minage)} in the past, but it is ${formatDateTime(dt_start)}`
   )
 
